@@ -1,38 +1,67 @@
-import os
 import re
 import datetime
+import urllib.parse
 import requests
 from bs4 import BeautifulSoup
 
-CHANNEL_URL = "https://t.me/s/mtproto_proxies"  # замените на ваш реальный канал
+# ── Замените на реальный URL вашего канала (формат /s/<name>) ────────────────
+CHANNEL_URL = "https://t.me/s/YOUR_CHANNEL_NAME"
 
-# Паттерн для валидного IP или домена (не заглушка)
-_VALID_SERVER_RE = re.compile(
-    r'^(?:'
-    r'\d{1,3}(?:\.\d{1,3}){3}'           # IPv4: 1.2.3.4
-    r'|'
-    r'[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?'
-    r'(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*'
-    r'\.[a-zA-Z]{2,6}'                    # домен: example.com, sub.example.org
-    r')$'
+# ── Паттерны адресов ─────────────────────────────────────────────────────────
+_IP_RE     = r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+_DOMAIN_RE = (
+    r'[a-zA-Z0-9]'
+    r'[a-zA-Z0-9\-]{0,61}'
+    r'[a-zA-Z0-9]'
+    r'(?:\.[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])*'
+    r'\.[a-zA-Z]{2,6}'
 )
-
-# Слова-заглушки, которые не являются реальными серверами
-_PLACEHOLDER_WORDS = {"unknown", "none", "null", "n/a", "—", "-", ""}
+_ANY_ADDR_RE = re.compile(r'(%s|%s)' % (_IP_RE, _DOMAIN_RE))
 
 
-def is_valid_server(value: str) -> bool:
-    """Возвращает True, если value — реальный IP или домен, а не заглушка."""
-    if not isinstance(value, str):
+def extract_server(text: str):
+    """
+    Двухуровневый поиск сервера:
+    1) После ключевого слова «Server»/«Сервер» — берём первый IP или домен
+       в радиусе 30 символов (обходит emoji, пробелы, \xa0, переносы строк).
+    2) Fallback: первый IP или домен в любом месте текста.
+    """
+    # Уровень 1 — по ключевому слову
+    kw = re.search(
+        r'(?:Server|Сервер)\s*:\s*[^\n]{0,30}?(%s|%s)' % (_IP_RE, _DOMAIN_RE),
+        text, re.IGNORECASE
+    )
+    if kw:
+        return kw.group(1).strip()
+
+    # Уровень 2 — fallback по паттерну
+    fb = _ANY_ADDR_RE.search(text)
+    if fb:
+        return fb.group(1).strip()
+
+    return None
+
+
+def is_valid_server(server) -> bool:
+    """
+    Белый список: пропускаем только IPv4 или домен.
+    Любое слово без точки (Unknown, None, Test…) не пройдёт.
+    """
+    if not isinstance(server, str) or not server.strip():
         return False
-    v = value.strip().lower()
-    if v in _PLACEHOLDER_WORDS:
-        return False
-    # Дополнительная защита: значение содержит кириллицу → заглушка
-    if re.search(r'[а-яёА-ЯЁ]', value):
-        return False
-    # Проверяем структуру: должен быть IPv4 или нормальный домен
-    return bool(_VALID_SERVER_RE.match(value.strip()))
+    s = server.strip()
+    # IPv4
+    if re.fullmatch(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', s):
+        return True
+    # Домен (минимум одна точка и буквенная зона)
+    if re.fullmatch(
+        r'[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}'
+        r'(?:\.[a-zA-Z0-9][a-zA-Z0-9\-]{0,61})*'
+        r'\.[a-zA-Z]{2,6}',
+        s
+    ):
+        return True
+    return False
 
 
 def parse_tg_channels():
@@ -54,74 +83,60 @@ def parse_tg_channels():
         messages = soup.find_all("div", class_="tgme_widget_message_bubble")
 
         proxies = []
-        seen = set()   # дедупликация по (server, port, secret)
+        seen = set()  # дедупликация за O(1)
 
         for msg in messages:
             text_block = msg.find("div", class_="tgme_widget_message_text")
             if not text_block:
                 continue
 
+            # separator='\n' — любой <br>/<p> превращается в перенос строки
             text = text_block.get_text(separator="\n")
 
-            # --- Порт ---
-            port_match = re.search(r"(?:Port|Порт):\s*(\d+)", text, re.IGNORECASE)
-            # --- Секрет ---
-            secret_match = re.search(
-                r"(?:Secret|Секрет):\s*([A-Za-z0-9+/=]{10,})", text, re.IGNORECASE
+            # ── Порт ────────────────────────────────────────────────────────
+            port_m = re.search(r'(?:Port|Порт)\s*:\s*(\d{1,5})', text, re.IGNORECASE)
+            # ── Секрет ──────────────────────────────────────────────────────
+            secret_m = re.search(
+                r'(?:Secret|Секрет)\s*:\s*([A-Za-z0-9+/=]{10,})',
+                text, re.IGNORECASE
             )
 
-            if not (port_match and secret_match):
+            if not (port_m and secret_m):
                 continue
 
-            port = port_match.group(1).strip()
-            secret = secret_match.group(1).strip()
+            port   = port_m.group(1).strip()
+            secret = secret_m.group(1).strip()
 
-            # --- Сервер: сначала по ключевому слову ---
-            server = None
-            server_kw_match = re.search(
-                r"(?:Server|Сервер):\s*([^\s\n,;]+)", text, re.IGNORECASE
-            )
-            if server_kw_match:
-                candidate = server_kw_match.group(1).strip()
-                # Отрезаем «мусорный хвост» (Border..., @handle, URL)
-                candidate = re.sub(r"(?i)Border.*$", "", candidate).strip()
-                candidate = re.sub(r"(?:@\w+|https?://\S+)", "", candidate).strip()
-                if is_valid_server(candidate):
-                    server = candidate
+            # ── Сервер ──────────────────────────────────────────────────────
+            server = extract_server(text)
 
-            # --- Сервер: fallback — первый IP или домен в тексте ---
-            if server is None:
-                ip_or_domain = re.search(
-                    r"\b(\d{1,3}(?:\.\d{1,3}){3}|"
-                    r"[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?"
-                    r"(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*"
-                    r"\.[a-zA-Z]{2,6})\b",
-                    text,
-                )
-                if ip_or_domain:
-                    candidate = ip_or_domain.group(1).strip()
-                    if is_valid_server(candidate):
-                        server = candidate
-
-            # --- Финальная проверка ---
             if not is_valid_server(server):
-                # Заглушка или не нашли — пропускаем карточку
-                print(f"[SKIP] Заглушка/невалидный сервер: {server!r}")
+                # Заглушка (Unknown, None…) или вообще не нашли — пропускаем
+                print(f"[SKIP] невалидный сервер: {server!r}")
                 continue
 
+            # Дедупликация
             key = (server.lower(), port, secret)
             if key in seen:
                 continue
             seen.add(key)
 
+            # Кодируем для URL (на всякий случай)
             tg_link = (
-                f"tg://proxy?server={server}&port={port}&secret={secret}"
-            )
-            proxies.append(
-                {"server": server, "port": port, "secret": secret, "link": tg_link}
+                f"tg://proxy"
+                f"?server={urllib.parse.quote(server)}"
+                f"&port={port}"
+                f"&secret={secret}"
             )
 
-        # Переворачиваем: свежие посты (в конце HTML) идут первыми
+            proxies.append({
+                "server": server,
+                "port":   port,
+                "secret": secret,
+                "link":   tg_link,
+            })
+
+        # Переворачиваем: последний пост канала → первая карточка на странице
         return proxies[::-1]
 
     except Exception as e:
@@ -132,7 +147,6 @@ def parse_tg_channels():
 # ── Генерация HTML ────────────────────────────────────────────────────────────
 
 proxies = parse_tg_channels()
-
 current_time = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
 
 html_content = f"""<!DOCTYPE html>
@@ -153,7 +167,10 @@ html_content = f"""<!DOCTYPE html>
         }}
         h2 {{ text-align: center; color: #2481cc; margin-bottom: 4px; }}
         .subtitle {{
-            text-align: center; color: #666; font-size: 13px; margin-bottom: 24px;
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 24px;
         }}
         .proxy-card {{
             background: #fff;
@@ -211,9 +228,9 @@ if proxies:
     <div class="proxy-card">
         <div class="proxy-info">
             <b>Прокси #{idx}</b>{badge}<br>
-            📍 <b>Сервер:</b> {p['server']}<br>
-            🔌 <b>Порт:</b> {p['port']}<br>
-            🔑 <b>Секрет:</b> <small style="color:#555;">{p['secret']}</small>
+            &#128205; <b>Сервер:</b> {p['server']}<br>
+            &#128299; <b>Порт:</b> {p['port']}<br>
+            &#128273; <b>Секрет:</b> <small style="color:#555;">{p['secret']}</small>
         </div>
         <a class="btn" href="{p['link']}">Подключить в Telegram</a>
     </div>
@@ -233,4 +250,4 @@ with open("index.html", "w", encoding="utf-8") as f:
 with open("last_run.txt", "w", encoding="utf-8") as f:
     f.write(f"Последний успешный запуск: {current_time}\n")
 
-print(f"✅ Сохранено прокси: {len(proxies)}")
+print(f"Сохранено прокси: {len(proxies)}")
