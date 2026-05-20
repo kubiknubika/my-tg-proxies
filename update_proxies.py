@@ -116,6 +116,15 @@ else:
 
 html_content += "</body></html>"
 
+# Сохраняем результат в файл index.html
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_content)
 print(f"Успешно добавлено {len(proxies)} прокси в index.html")
+
+# ТРЮК ДЛЯ ОБХОДА ЗАМОРОЗКИ CRON: записываем время в отдельный файл
+import datetime
+current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+with open("last_run.txt", "w", encoding="utf-8") as f:
+    f.write(f"Последний успешный запуск робота: {current_time}")
+print("Файл активности last_run.txt обновлен для поддержки триггера cron.")
+
