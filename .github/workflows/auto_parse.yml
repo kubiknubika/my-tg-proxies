@@ -2,7 +2,6 @@ name: Auto Update Proxies Website
 
 on:
   schedule:
-    # Каждую 17-ю минуту каждого часа (18:17, 19:17 …)
     - cron: '17 * * * *'
   workflow_dispatch:
 
@@ -27,13 +26,18 @@ jobs:
       - name: Установка библиотек
         run: pip install requests beautifulsoup4
 
+      - name: Создать папки если нет
+        run: mkdir -p data docs
+
       - name: Запуск парсера
         run: python update_proxies.py
 
-      - name: Сохранение изменений на сайт
+      - name: Сохранение изменений
         run: |
           git config --global user.name  "GitHub Action"
           git config --global user.email "action@github.com"
-          git add index.html last_run.txt
+          rm -f index.html
+          git rm --cached index.html 2>/dev/null || true
+          git add docs/index.html docs/archive.html data/proxies.json last_run.txt
           git diff --quiet && git diff --staged --quiet || \
-            (git commit -m "Авто-обновление прокси и лога активности" && git push)
+            (git commit -m "auto: обновление прокси $(date -u '+%Y-%m-%d %H:%M UTC')" && git push)
