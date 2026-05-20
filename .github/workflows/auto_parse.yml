@@ -26,7 +26,7 @@ jobs:
       - name: Установка библиотек
         run: pip install requests beautifulsoup4
 
-      - name: Создать папки если нет
+      - name: Создать папки
         run: mkdir -p data docs
 
       - name: Запуск парсера
@@ -36,8 +36,12 @@ jobs:
         run: |
           git config --global user.name  "GitHub Action"
           git config --global user.email "action@github.com"
+
+          # Удаляем index.html из корня если он есть
           rm -f index.html
           git rm --cached index.html 2>/dev/null || true
+
           git add docs/index.html docs/archive.html data/proxies.json last_run.txt
+
           git diff --quiet && git diff --staged --quiet || \
             (git commit -m "auto: обновление прокси $(date -u '+%Y-%m-%d %H:%M UTC')" && git push)
