@@ -46,7 +46,7 @@ def parse_tg_channels():
                     ip_or_domain = re.search(r'([a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', text)
                     server = ip_or_domain.group(1).strip() if ip_or_domain else None
                 
-                if server:
+                if server and server.lower() != "unknown":
                     # Очищаем адрес от случайных символов/линков Telegram в конце строки
                     server = re.sub(r'(@\w+|https?://\S+)', '', server).strip()
                     tg_link = f"tg://proxy?server={server}&port={port}&secret={secret}"
