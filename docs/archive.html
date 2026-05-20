@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Архив MTProto Прокси</title>
+    <style>
+*, *::before, *::after { box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    max-width: 540px; margin: 24px auto; padding: 0 15px 50px;
+    background: #e7ebf0; color: #111;
+}
+h2 { text-align: center; color: #2481cc; margin-bottom: 4px; }
+.subtitle { text-align: center; color: #666; font-size: 13px; margin-bottom: 6px; }
+.nav { text-align: center; margin-bottom: 22px; font-size: 14px; }
+.nav a { color: #2481cc; text-decoration: none; margin: 0 8px; font-weight: 600; }
+.nav a:hover { text-decoration: underline; }
+.proxy-card {
+    background: #fff; padding: 18px 20px; margin-bottom: 13px;
+    border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,.08);
+    border-left: 4px solid #ccc;
+}
+.proxy-card.alive  { border-left-color: #27ae60; }
+.proxy-card.dead   { border-left-color: #e74c3c; opacity: .75; }
+.proxy-card.unknown{ border-left-color: #95a5a6; }
+.proxy-info { font-size: 14px; line-height: 1.75; margin-bottom: 11px; word-break: break-all; }
+.badge {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 2px 7px; border-radius: 5px; margin-left: 5px; vertical-align: middle;
+}
+.badge-new   { background: #ff6b35; color: #fff; }
+.badge-alive { background: #27ae60; color: #fff; }
+.badge-dead  { background: #e74c3c; color: #fff; }
+.badge-warn  { background: #f39c12; color: #fff; }
+.meta { font-size: 12px; color: #999; margin-bottom: 8px; }
+.btn {
+    display: block; background: #2481cc; color: #fff; padding: 11px;
+    text-decoration: none; border-radius: 8px; text-align: center;
+    font-weight: 700; font-size: 15px;
+}
+.btn:hover { background: #1a6aaa; }
+.empty { text-align: center; padding: 40px 20px; color: #666; font-size: 15px; }
+.tcp-note {
+    background: #fff8e1; border: 1px solid #ffe082; border-radius: 8px;
+    padding: 10px 14px; margin-bottom: 18px; font-size: 12px; color: #666;
+}
+</style>
+</head>
+<body>
+    <h2>&#128196; Архив прокси (7 дней)</h2>
+    <div class="subtitle">Прокси из прошлых запусков — могут быть устаревшими</div>
+    <div class="nav"><a href="index.html">&#128640; Свежие</a> &bull; <a href="archive.html">&#128196; Архив 7 дней</a></div>
+    <div class="tcp-note">&#9888;&#65039; <b>TCP-проверка</b> показывает только что порт открыт — не гарантирует работу MTProto. Проверяйте прокси кнопкой в Telegram.</div>
+    <div class="proxy-card unknown empty"><p>Архив пуст. Появится после нескольких запусков.</p></div>
+    <div class="subtitle" style="margin-top:24px;">&#128337; Обновлено: 2026-05-20 19:54 UTC</div>
+</body>
+</html>
