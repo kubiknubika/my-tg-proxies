@@ -2,14 +2,10 @@ name: Auto Update Proxies Website
 
 on:
   schedule:
-    # Изменено на запуск в начале каждого часа (работает на бесплатных тарифах гораздо стабильнее)
-    - cron: '0 * * * *'
-  workflow_dispatch: # Кнопка ручного запуска
-
-# Явно привязываем воркфлоу к ветке main для триггеров расписания
-defaults:
-  run:
-    shell: bash
+    # Запуск каждую 17-ю минуту часа (например, 18:17, 19:17)
+    # Это позволяет обходить пиковые нагрузки на сервера GitHub
+    - cron: '17 * * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -18,10 +14,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    # Используем строго v4, совместимую с новыми правилами Node.js 
     - name: Проверка репозитория
       uses: actions/checkout@v4
       with:
-        ref: main # Явно указываем ветку
+        ref: main
 
     - name: Установка Python
       uses: actions/setup-python@v5
