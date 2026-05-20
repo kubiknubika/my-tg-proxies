@@ -4,64 +4,22 @@ import urllib.parse
 import requests
 from bs4 import BeautifulSoup
 
-# ── Замените на реальный URL вашего канала (формат /s/<name>) ────────────────
-CHANNEL_URL = "https://t.me/s/YOUR_CHANNEL_NAME"
+CHANNEL_URL = "https://t.me/s/ProxyMTProto"
 
-# ── Паттерны адресов ─────────────────────────────────────────────────────────
+# ── Паттерны для валидации сервера ───────────────────────────────────────────
 _IP_RE     = r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
-_DOMAIN_RE = (
-    r'[a-zA-Z0-9]'
-    r'[a-zA-Z0-9\-]{0,61}'
-    r'[a-zA-Z0-9]'
-    r'(?:\.[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])*'
-    r'\.[a-zA-Z]{2,6}'
-)
-_ANY_ADDR_RE = re.compile(r'(%s|%s)' % (_IP_RE, _DOMAIN_RE))
+_DOMAIN_RE = r'[a-zA-Z0-9][a-zA-Z0-9\-]*(?:\.[a-zA-Z0-9][a-zA-Z0-9\-]*)*\.[a-zA-Z]{2,6}'
 
 
-def extract_server(text: str):
-    """
-    Двухуровневый поиск сервера:
-    1) После ключевого слова «Server»/«Сервер» — берём первый IP или домен
-       в радиусе 30 символов (обходит emoji, пробелы, \xa0, переносы строк).
-    2) Fallback: первый IP или домен в любом месте текста.
-    """
-    # Уровень 1 — по ключевому слову
-    kw = re.search(
-        r'(?:Server|Сервер)\s*:\s*[^\n]{0,30}?(%s|%s)' % (_IP_RE, _DOMAIN_RE),
-        text, re.IGNORECASE
-    )
-    if kw:
-        return kw.group(1).strip()
-
-    # Уровень 2 — fallback по паттерну
-    fb = _ANY_ADDR_RE.search(text)
-    if fb:
-        return fb.group(1).strip()
-
-    return None
-
-
-def is_valid_server(server) -> bool:
-    """
-    Белый список: пропускаем только IPv4 или домен.
-    Любое слово без точки (Unknown, None, Test…) не пройдёт.
-    """
-    if not isinstance(server, str) or not server.strip():
+def is_valid_server(s) -> bool:
+    """Белый список: только IPv4 или домен. Unknown, None и т.п. — мимо."""
+    if not isinstance(s, str) or not s.strip():
         return False
-    s = server.strip()
-    # IPv4
-    if re.fullmatch(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', s):
-        return True
-    # Домен (минимум одна точка и буквенная зона)
-    if re.fullmatch(
-        r'[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}'
-        r'(?:\.[a-zA-Z0-9][a-zA-Z0-9\-]{0,61})*'
-        r'\.[a-zA-Z]{2,6}',
-        s
-    ):
-        return True
-    return False
+    v = s.strip()
+    return bool(
+        re.fullmatch(_IP_RE, v) or
+        re.fullmatch(_DOMAIN_RE, v)
+    )
 
 
 def parse_tg_channels():
@@ -76,67 +34,92 @@ def parse_tg_channels():
     try:
         response = requests.get(CHANNEL_URL, headers=headers, timeout=15)
         if response.status_code != 200:
-            print(f"Сервер вернул статус {response.status_code}")
+            print(f"Ошибка запроса: HTTP {response.status_code}")
             return []
 
         soup = BeautifulSoup(response.text, "html.parser")
-        messages = soup.find_all("div", class_="tgme_widget_message_bubble")
-
         proxies = []
         seen = set()  # дедупликация за O(1)
 
-        for msg in messages:
-            text_block = msg.find("div", class_="tgme_widget_message_text")
-            if not text_block:
+        # ══════════════════════════════════════════════════════════════════════
+        # СТРАТЕГИЯ 1 (приоритетная): готовые tg:// и https://t.me/proxy? ссылки
+        # Они уже содержат все три параметра — самый надёжный источник.
+        # ══════════════════════════════════════════════════════════════════════
+        for a in soup.find_all("a", href=True):
+            href = a["href"]
+            if "server=" not in href:
                 continue
 
-            # separator='\n' — любой <br>/<p> превращается в перенос строки
-            text = text_block.get_text(separator="\n")
+            # Нормализуем tg://proxy? и https://t.me/proxy? к одному виду
+            normalized = href.replace("https://t.me/proxy?", "scheme://x?")
+            normalized = normalized.replace("tg://proxy?", "scheme://x?")
 
-            # ── Порт ────────────────────────────────────────────────────────
-            port_m = re.search(r'(?:Port|Порт)\s*:\s*(\d{1,5})', text, re.IGNORECASE)
-            # ── Секрет ──────────────────────────────────────────────────────
-            secret_m = re.search(
-                r'(?:Secret|Секрет)\s*:\s*([A-Za-z0-9+/=]{10,})',
-                text, re.IGNORECASE
-            )
-
-            if not (port_m and secret_m):
+            try:
+                params = urllib.parse.parse_qs(
+                    urllib.parse.urlparse(normalized).query
+                )
+                server = params.get("server", [None])[0]
+                port   = params.get("port",   [None])[0]
+                secret = params.get("secret", [None])[0]
+            except Exception:
                 continue
 
-            port   = port_m.group(1).strip()
-            secret = secret_m.group(1).strip()
-
-            # ── Сервер ──────────────────────────────────────────────────────
-            server = extract_server(text)
-
+            if not (server and port and secret):
+                continue
             if not is_valid_server(server):
-                # Заглушка (Unknown, None…) или вообще не нашли — пропускаем
-                print(f"[SKIP] невалидный сервер: {server!r}")
+                print(f"[SKIP-1] невалидный сервер из ссылки: {server!r}")
                 continue
 
-            # Дедупликация
             key = (server.lower(), port, secret)
             if key in seen:
                 continue
             seen.add(key)
 
-            # Кодируем для URL (на всякий случай)
-            tg_link = (
-                f"tg://proxy"
-                f"?server={urllib.parse.quote(server)}"
-                f"&port={port}"
-                f"&secret={secret}"
+            tg_link = f"tg://proxy?server={server}&port={port}&secret={secret}"
+            proxies.append({"server": server, "port": port, "secret": secret, "link": tg_link})
+
+        # ══════════════════════════════════════════════════════════════════════
+        # СТРАТЕГИЯ 2 (резервная): парсинг текста сообщений
+        # Нужна для постов без кнопок. Учитывает, что значение может быть
+        # на СЛЕДУЮЩЕЙ строке после метки (реальный формат канала).
+        # ══════════════════════════════════════════════════════════════════════
+        for msg in soup.find_all("div", class_="tgme_widget_message_text"):
+            text = msg.get_text(separator="\n")
+
+            # \n?\s* — значение может быть на следующей строке
+            server_m = re.search(
+                r'(?:Server|Сервер)\s*:\s*\n?\s*(%s|%s)' % (_IP_RE, _DOMAIN_RE),
+                text, re.IGNORECASE
+            )
+            port_m = re.search(
+                r'(?:Port|Порт)\s*:\s*\n?\s*(\d{1,5})',
+                text, re.IGNORECASE
+            )
+            secret_m = re.search(
+                r'(?:Secret|Секрет)\s*:\s*\n?\s*([A-Za-z0-9+/=]{10,})',
+                text, re.IGNORECASE
             )
 
-            proxies.append({
-                "server": server,
-                "port":   port,
-                "secret": secret,
-                "link":   tg_link,
-            })
+            if not (server_m and port_m and secret_m):
+                continue
 
-        # Переворачиваем: последний пост канала → первая карточка на странице
+            server = server_m.group(1).strip()
+            port   = port_m.group(1).strip()
+            secret = secret_m.group(1).strip()
+
+            if not is_valid_server(server):
+                print(f"[SKIP-2] невалидный сервер из текста: {server!r}")
+                continue
+
+            key = (server.lower(), port, secret)
+            if key in seen:
+                continue  # уже добавлен стратегией 1
+            seen.add(key)
+
+            tg_link = f"tg://proxy?server={server}&port={port}&secret={secret}"
+            proxies.append({"server": server, "port": port, "secret": secret, "link": tg_link})
+
+        # Переворачиваем: последние посты канала → первые карточки на странице
         return proxies[::-1]
 
     except Exception as e:
@@ -148,6 +131,10 @@ def parse_tg_channels():
 
 proxies = parse_tg_channels()
 current_time = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+
+print(f"Найдено прокси: {len(proxies)}")
+for p in proxies[:5]:
+    print(f"  {p['server']}:{p['port']}")
 
 html_content = f"""<!DOCTYPE html>
 <html lang="ru">
@@ -217,13 +204,13 @@ html_content = f"""<!DOCTYPE html>
     </style>
 </head>
 <body>
-    <h2>🚀 Свежие MTProto Прокси</h2>
-    <div class="subtitle">Обновляется автоматически · {current_time}</div>
+    <h2>&#128640; Свежие MTProto Прокси</h2>
+    <div class="subtitle">Обновляется автоматически &middot; {current_time}</div>
 """
 
 if proxies:
     for idx, p in enumerate(proxies[:15], 1):
-        badge = '<span class="badge">🔥 Свежий</span>' if idx == 1 else ""
+        badge = '<span class="badge">&#128293; Свежий</span>' if idx == 1 else ""
         html_content += f"""
     <div class="proxy-card">
         <div class="proxy-info">
@@ -250,4 +237,4 @@ with open("index.html", "w", encoding="utf-8") as f:
 with open("last_run.txt", "w", encoding="utf-8") as f:
     f.write(f"Последний успешный запуск: {current_time}\n")
 
-print(f"Сохранено прокси: {len(proxies)}")
+print(f"Готово. Сохранено {len(proxies)} прокси в index.html")
