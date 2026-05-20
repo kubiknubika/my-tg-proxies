@@ -27,6 +27,7 @@ def parse_tg_channels():
                 
             text = text_block.get_text(separator='\n')
             
+            # Находим порт и секрет (они всегда одинаковые)
             port_match = re.search(r'(?:Port|Порт):\s*(\d+)', text, re.IGNORECASE)
             secret_match = re.search(r'(?:Secret|Секрет):\s*([^\s\n]+)', text, re.IGNORECASE)
             
@@ -34,6 +35,7 @@ def parse_tg_channels():
                 port = port_match.group(1).strip()
                 secret = secret_match.group(1).strip()
                 
+                # Умный поиск сервера: ищем ключевое слово, либо паттерн IP/домена
                 server_match = re.search(r'(?:Server|Сервер):\s*([^\s\n]+)', text, re.IGNORECASE)
                 if server_match:
                     server = server_match.group(1).strip()
@@ -41,9 +43,12 @@ def parse_tg_channels():
                     ip_or_domain = re.search(r'([a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', text)
                     server = ip_or_domain.group(1).strip() if ip_or_domain else None
                 
-                # ЖЕСТКАЯ ФИЛЬТРАЦИЯ МУСОРА: проверяем, что сервер найден и это не "Unknown"
-                if server and str(server).lower() != "unknown":
-                    server = re.sub(r'(@\w+|https?://\S+)', '', str(server)).strip()
+                # Проверяем, что сервер — это строка, она существует и это не "Unknown"
+                if server and hasattr(server, 'lower') and server.lower() != "unknown":
+                    # Очищаем от мусора в конце строки
+                    server = re.sub(r'Border.*', '', server, flags=re.IGNORECASE)
+                    server = re.sub(r'(@\w+|https?://\S+)', '', server).strip()
+                    
                     tg_link = f"tg://proxy?server={server}&port={port}&secret={secret}"
                     
                     proxy_data = {
