@@ -17,20 +17,16 @@ def parse_tg_channels():
             return []
         
         soup = BeautifulSoup(response.text, 'html.parser')
-        
-        # Находим чистые блоки сообщений, которые физически видны на экране
         messages = soup.find_all('div', class_='tgme_widget_message_bubble')
         proxies = []
         
         for msg in messages:
-            # Игнорируем сервисные сообщения об удалении или пересылке без текста
             text_block = msg.find('div', class_='tgme_widget_message_text')
             if not text_block:
                 continue
                 
             text = text_block.get_text(separator='\n')
             
-            # Проверяем, что это не рекламный пост (в прокси-постах всегда есть цифры порта)
             port_match = re.search(r'(?:Port|Порт):\s*(\d+)', text, re.IGNORECASE)
             secret_match = re.search(r'(?:Secret|Секрет):\s*([^\s\n]+)', text, re.IGNORECASE)
             
@@ -38,7 +34,6 @@ def parse_tg_channels():
                 port = port_match.group(1).strip()
                 secret = secret_match.group(1).strip()
                 
-                # Ищем сервер: сначала по слову, если нет - по паттерну IP/домена
                 server_match = re.search(r'(?:Server|Сервер):\s*([^\s\n]+)', text, re.IGNORECASE)
                 if server_match:
                     server = server_match.group(1).strip()
@@ -46,9 +41,9 @@ def parse_tg_channels():
                     ip_or_domain = re.search(r'([a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', text)
                     server = ip_or_domain.group(1).strip() if ip_or_domain else None
                 
-                if server and server.lower() != "unknown":
-                    # Очищаем адрес от случайных символов/линков Telegram в конце строки
-                    server = re.sub(r'(@\w+|https?://\S+)', '', server).strip()
+                # ЖЕСТКАЯ ФИЛЬТРАЦИЯ МУСОРА: проверяем, что сервер найден и это не "Unknown"
+                if server and str(server).lower() != "unknown":
+                    server = re.sub(r'(@\w+|https?://\S+)', '', str(server)).strip()
                     tg_link = f"tg://proxy?server={server}&port={port}&secret={secret}"
                     
                     proxy_data = {
@@ -61,7 +56,6 @@ def parse_tg_channels():
                     if proxy_data not in proxies:
                         proxies.append(proxy_data)
                         
-        # Переворачиваем список, чтобы самые новые посты (снизу ленты) оказались вверху сайта
         return proxies[::-1]
     except Exception as e:
         print(f"Ошибка парсинга: {e}")
@@ -69,7 +63,6 @@ def parse_tg_channels():
 
 proxies = parse_tg_channels()
 
-# Генерируем красивую HTML-страницу
 html_content = f"""
 <!DOCTYPE html>
 <html lang="ru">
@@ -116,6 +109,7 @@ html_content += "</body></html>"
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_content)
 
+import datetime
 current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 with open("last_run.txt", "w", encoding="utf-8") as f:
     f.write(f"Последний успешный запуск робота: {current_time}")
