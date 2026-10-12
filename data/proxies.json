@@ -6,7 +6,7 @@
     "link": "tg://proxy?server=mash.drproxy.pro&port=443&secret=dda5a7b5711e648c7bd534e4e87de2241b",
     "source": "https://t.me/s/mtproto_proxy",
     "alive": true,
-    "latency": 257,
+    "latency": 25,
     "first_seen": "2026-05-20",
     "last_seen": "2026-10-12"
   },
@@ -17,7 +17,7 @@
     "link": "tg://proxy?server=95.217.135.241&port=443&secret=7pJZSUjIp-43RmluNUkNmWNkbnMuZ29vZ2clLmNvbQ==",
     "source": "https://t.me/s/MTProtoProxies",
     "alive": true,
-    "latency": 148,
+    "latency": 115,
     "first_seen": "2026-05-20",
     "last_seen": "2026-10-12"
   },
@@ -28,7 +28,7 @@
     "link": "tg://proxy?server=95.217.135.241&port=443&secret=7pJZSUjIp-43RmluNUkNmWNkbnMuZ29vZ2xlLmNvbG==",
     "source": "https://t.me/s/MTProtoProxies",
     "alive": true,
-    "latency": 149,
+    "latency": 115,
     "first_seen": "2026-05-20",
     "last_seen": "2026-10-12"
   },
@@ -39,7 +39,7 @@
     "link": "tg://proxy?server=95.217.135.241&port=443&secret=7pJZSUjIp-43RmluNUkNmWNkbnMuZ28vZ2xlImNvbG==",
     "source": "https://t.me/s/MTProtoProxies",
     "alive": true,
-    "latency": 153,
+    "latency": 116,
     "first_seen": "2026-05-20",
     "last_seen": "2026-10-12"
   },
@@ -50,7 +50,7 @@
     "link": "tg://proxy?server=95.217.135.241&port=443&secret=7pJZSUjIp-43RmluNUkNmWNkbnMuZ18vZ3xlLmNvbQ==",
     "source": "https://t.me/s/MTProtoProxies",
     "alive": true,
-    "latency": 149,
+    "latency": 118,
     "first_seen": "2026-05-20",
     "last_seen": "2026-10-12"
   },
@@ -61,7 +61,7 @@
     "link": "tg://proxy?server=95.217.135.241&port=443&secret=7pJZSUjIp-43RmluNUkNmWNkbnMuZ29vZ3xlLmNvbQ==",
     "source": "https://t.me/s/MTProtoProxies",
     "alive": true,
-    "latency": 151,
+    "latency": 114,
     "first_seen": "2026-05-20",
     "last_seen": "2026-10-12"
   },
@@ -72,7 +72,7 @@
     "link": "tg://proxy?server=95.217.135.241&port=443&secret=7pJZSUjIp-43RmluNUkNmWNkbnMuZ29vZ2xlLmNvbQ=m",
     "source": "https://t.me/s/MTProtoProxies",
     "alive": true,
-    "latency": 145,
+    "latency": 114,
     "first_seen": "2026-05-20",
     "last_seen": "2026-10-12"
   },
@@ -83,7 +83,7 @@
     "link": "tg://proxy?server=95.217.135.241&port=443&secret=7pJZSUjIp-43RmluNUkNmWNkbnMuZ19vZ2xlLmNvbQ==",
     "source": "https://t.me/s/MTProtoProxies",
     "alive": true,
-    "latency": 146,
+    "latency": 114,
     "first_seen": "2026-05-20",
     "last_seen": "2026-10-12"
   },
@@ -94,7 +94,7 @@
     "link": "tg://proxy?server=95.217.135.241&port=443&secret=7pJZSUjIp-43RmluNUkNmWNkbnMuZ15vZ2xlLmNvbQ==",
     "source": "https://t.me/s/MTProtoProxies",
     "alive": true,
-    "latency": 148,
+    "latency": 116,
     "first_seen": "2026-05-20",
     "last_seen": "2026-10-12"
   },
@@ -105,7 +105,7 @@
     "link": "tg://proxy?server=95.217.135.241&port=443&secret=7pJZSUjIp-43RmluNUkNmWNkbnMuZ18vZ2xlLmNvbQ==",
     "source": "https://t.me/s/MTProtoProxies",
     "alive": true,
-    "latency": 151,
+    "latency": 113,
     "first_seen": "2026-05-20",
     "last_seen": "2026-10-12"
   },
@@ -116,7 +116,7 @@
     "link": "tg://proxy?server=95.217.135.241&port=443&secret=7pJZSUjIp-43RmluNUkNmWNkbnMuZ14vZ2xlLmNvbQ==",
     "source": "https://t.me/s/MTProtoProxies",
     "alive": true,
-    "latency": 144,
+    "latency": 114,
     "first_seen": "2026-05-20",
     "last_seen": "2026-10-12"
   },
@@ -127,7 +127,7 @@
     "link": "tg://proxy?server=95.217.135.241&port=443&secret=7pJZSUjIp-43RmluNUkNmWNkbnMuZ11vZ2xlLmNvbQ==",
     "source": "https://t.me/s/MTProtoProxies",
     "alive": true,
-    "latency": 149,
+    "latency": 115,
     "first_seen": "2026-05-20",
     "last_seen": "2026-10-12"
   },
@@ -138,7 +138,7 @@
     "link": "tg://proxy?server=95.217.135.241&port=443&secret=7pJZSUjIp-43RmluNUkNmWNkbnMuZ29vZ2xlImNvbG==",
     "source": "https://t.me/s/MTProtoProxies",
     "alive": true,
-    "latency": 151,
+    "latency": 116,
     "first_seen": "2026-05-20",
     "last_seen": "2026-10-12"
   },
@@ -325,7 +325,7 @@
     "link": "tg://proxy?server=puot.mozitop.co.uk&port=8443&secret=eeNEgYdJvXrFGRMCIMJdCQ",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 174,
+    "latency": 111,
     "first_seen": "2026-08-07",
     "last_seen": "2026-10-12"
   },
@@ -336,7 +336,7 @@
     "link": "tg://proxy?server=mio.mozitop.co.uk&port=8443&secret=eeNEgYdJvXrFGRMCIMJdCQ",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 158,
+    "latency": 108,
     "first_seen": "2026-08-07",
     "last_seen": "2026-10-12"
   },
@@ -347,7 +347,7 @@
     "link": "tg://proxy?server=ving.mozitop.co.uk&port=8443&secret=eeNEgYdJvXrFGRMCIMJdCQ",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 302,
+    "latency": 111,
     "first_seen": "2026-08-07",
     "last_seen": "2026-10-12"
   },
@@ -523,9 +523,9 @@
     "link": "tg://proxy?server=208.87.242.223&port=8443&secret=EERighJJvXrFGRMCIMjdCQ",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 52,
+    "latency": 55,
     "first_seen": "2026-09-15",
-    "last_seen": "2026-10-09"
+    "last_seen": "2026-10-12"
   },
   {
     "server": "ir.simpleelegance-us.info",
@@ -534,9 +534,9 @@
     "link": "tg://proxy?server=ir.simpleelegance-us.info&port=8443&secret=EERighJJvXrFGRMCIMjdCQ",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 266,
+    "latency": 248,
     "first_seen": "2026-09-21",
-    "last_seen": "2026-10-09"
+    "last_seen": "2026-10-12"
   },
   {
     "server": "nasho.poolaki.co.uk",
@@ -589,7 +589,7 @@
     "link": "tg://proxy?server=akenai.tg&port=853&secret=ee54ce330e4690cc297d2b031ff3f288b06d742e616b656e61692e636c69636b",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 431,
+    "latency": 185,
     "first_seen": "2026-09-23",
     "last_seen": "2026-10-12"
   },
@@ -853,9 +853,9 @@
     "link": "tg://proxy?server=Qeshm.island.ir.igakwvwa.info&port=7443&secret=1603010200010001fc030386e24c3add",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 81,
+    "latency": 30,
     "first_seen": "2026-10-03",
-    "last_seen": "2026-10-08"
+    "last_seen": "2026-10-12"
   },
   {
     "server": "65.21.227.200",
@@ -1425,7 +1425,7 @@
     "link": "tg://proxy?server=usb.neo-duo.co.uk&port=8443&secret=EERighJJvXrFGRMCIMJdCQ",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 197,
+    "latency": 127,
     "first_seen": "2026-10-09",
     "last_seen": "2026-10-12"
   },
@@ -1436,7 +1436,7 @@
     "link": "tg://proxy?server=nfc.neo-duo.co.uk&port=8443&secret=EERighJJvXrFGRMCIMJdCQ",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 196,
+    "latency": 149,
     "first_seen": "2026-10-09",
     "last_seen": "2026-10-12"
   },
@@ -1447,9 +1447,9 @@
     "link": "tg://proxy?server=ir.macauley.info&port=8443&secret=EERighJJvXrFGRMCIMjdCQ",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 260,
+    "latency": 267,
     "first_seen": "2026-10-09",
-    "last_seen": "2026-10-09"
+    "last_seen": "2026-10-12"
   },
   {
     "server": "darya.saheledarya.co.uk",
@@ -1501,8 +1501,8 @@
     "secret": "dd27e57f496bbf279605f0198ea6d26067",
     "link": "tg://proxy?server=web.arixo.shop&port=443&secret=dd27e57f496bbf279605f0198ea6d26067",
     "source": "https://t.me/s/ProxyMTProto",
-    "alive": true,
-    "latency": 208,
+    "alive": false,
+    "latency": null,
     "first_seen": "2026-10-09",
     "last_seen": "2026-10-12"
   },
@@ -1535,7 +1535,7 @@
     "link": "tg://proxy?server=ir-ir.gnutella2.info&port=8443&secret=EERighJJvXrFGRMCIMjdCQ",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 212,
+    "latency": 225,
     "first_seen": "2026-10-10",
     "last_seen": "2026-10-12"
   },
@@ -1557,7 +1557,7 @@
     "link": "tg://proxy?server=1.iraj.trsr57d.co.uk&port=8443&secret=dd104462821249bd7ac519130220c25d09",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 410,
+    "latency": 329,
     "first_seen": "2026-10-10",
     "last_seen": "2026-10-12"
   },
@@ -1568,7 +1568,7 @@
     "link": "tg://proxy?server=ok.iraj.trsr57d.co.uk&port=8443&secret=dd104462821249bd7ac519130220c25d09",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 406,
+    "latency": 330,
     "first_seen": "2026-10-10",
     "last_seen": "2026-10-12"
   },
@@ -1579,7 +1579,7 @@
     "link": "tg://proxy?server=cdnbarrel.org&port=443&secret=ddd53127c4392815612a47803b9620ee40",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 203,
+    "latency": 237,
     "first_seen": "2026-10-10",
     "last_seen": "2026-10-12"
   },
@@ -1590,7 +1590,7 @@
     "link": "tg://proxy?server=noway.iraj.trsr57d.co.uk&port=8443&secret=dd104462821249bd7ac519130220c25d09",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 414,
+    "latency": 328,
     "first_seen": "2026-10-10",
     "last_seen": "2026-10-12"
   },
@@ -1645,7 +1645,7 @@
     "link": "tg://proxy?server=ir-ir.rebol.info&port=8443&secret=EERighJJvXrFGRMCIMjdCQ",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 218,
+    "latency": 205,
     "first_seen": "2026-10-11",
     "last_seen": "2026-10-12"
   },
@@ -1678,7 +1678,7 @@
     "link": "tg://proxy?server=91.98.97.225&port=8443&secret=eeNEgYdJvXrFGRMCIMJdCQ",
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
-    "latency": 152,
+    "latency": 123,
     "first_seen": "2026-10-11",
     "last_seen": "2026-10-12"
   },
@@ -1712,6 +1712,116 @@
     "source": "https://t.me/s/ProxyMTProto",
     "alive": true,
     "latency": 138,
+    "first_seen": "2026-10-12",
+    "last_seen": "2026-10-12"
+  },
+  {
+    "server": "cdnwave.org",
+    "port": "443",
+    "secret": "dd65373b054948c84eb4a74630d4a79b22",
+    "link": "tg://proxy?server=cdnwave.org&port=443&secret=dd65373b054948c84eb4a74630d4a79b22",
+    "source": "https://t.me/s/ProxyMTProto",
+    "alive": true,
+    "latency": 106,
+    "first_seen": "2026-10-12",
+    "last_seen": "2026-10-12"
+  },
+  {
+    "server": "ultra.proxynet.tech",
+    "port": "443",
+    "secret": "eec5b6dfd5a5f78d29e7eee7aa64aae742756c7472612e70726f78796e65742e74656368",
+    "link": "tg://proxy?server=ultra.proxynet.tech&port=443&secret=eec5b6dfd5a5f78d29e7eee7aa64aae742756c7472612e70726f78796e65742e74656368",
+    "source": "https://t.me/s/ProxyMTProto",
+    "alive": true,
+    "latency": 113,
+    "first_seen": "2026-10-12",
+    "last_seen": "2026-10-12"
+  },
+  {
+    "server": "top.proxynet.tech",
+    "port": "443",
+    "secret": "ee59d1ef95ab03cfeaebb18b0a529ad5e6746f702e70726f78796e65742e74656368",
+    "link": "tg://proxy?server=top.proxynet.tech&port=443&secret=ee59d1ef95ab03cfeaebb18b0a529ad5e6746f702e70726f78796e65742e74656368",
+    "source": "https://t.me/s/ProxyMTProto",
+    "alive": true,
+    "latency": 124,
+    "first_seen": "2026-10-12",
+    "last_seen": "2026-10-12"
+  },
+  {
+    "server": "cdnswell.com",
+    "port": "443",
+    "secret": "dd203c1c0173ed19b5bf9f28f81777eaec",
+    "link": "tg://proxy?server=cdnswell.com&port=443&secret=dd203c1c0173ed19b5bf9f28f81777eaec",
+    "source": "https://t.me/s/ProxyMTProto",
+    "alive": true,
+    "latency": 129,
+    "first_seen": "2026-10-12",
+    "last_seen": "2026-10-12"
+  },
+  {
+    "server": "dingi3.co.uk",
+    "port": "4455",
+    "secret": "dd104462821249bd7ac519130220c25d09",
+    "link": "tg://proxy?server=dingi3.co.uk&port=4455&secret=dd104462821249bd7ac519130220c25d09",
+    "source": "https://t.me/s/ProxyMTProto",
+    "alive": true,
+    "latency": 147,
+    "first_seen": "2026-10-12",
+    "last_seen": "2026-10-12"
+  },
+  {
+    "server": "porsorate.co.uk",
+    "port": "4455",
+    "secret": "dd104462821249bd7ac519130220c25d09",
+    "link": "tg://proxy?server=porsorate.co.uk&port=4455&secret=dd104462821249bd7ac519130220c25d09",
+    "source": "https://t.me/s/ProxyMTProto",
+    "alive": true,
+    "latency": 158,
+    "first_seen": "2026-10-12",
+    "last_seen": "2026-10-12"
+  },
+  {
+    "server": "ir-ir.flipme.info",
+    "port": "8443",
+    "secret": "EERighJJvXrFGRMCIMjdCQ",
+    "link": "tg://proxy?server=ir-ir.flipme.info&port=8443&secret=EERighJJvXrFGRMCIMjdCQ",
+    "source": "https://t.me/s/ProxyMTProto",
+    "alive": true,
+    "latency": 240,
+    "first_seen": "2026-10-12",
+    "last_seen": "2026-10-12"
+  },
+  {
+    "server": "e3fand.fesgheli.co.uk",
+    "port": "8443",
+    "secret": "eeNEgYdJvXrFGRMCIMJdCQ",
+    "link": "tg://proxy?server=e3fand.fesgheli.co.uk&port=8443&secret=eeNEgYdJvXrFGRMCIMJdCQ",
+    "source": "https://t.me/s/ProxyMTProto",
+    "alive": true,
+    "latency": 314,
+    "first_seen": "2026-10-12",
+    "last_seen": "2026-10-12"
+  },
+  {
+    "server": "exiscos.co.uk",
+    "port": "8443",
+    "secret": "eeNEgYdJvXrFGRMCIMJdCQ",
+    "link": "tg://proxy?server=exiscos.co.uk&port=8443&secret=eeNEgYdJvXrFGRMCIMJdCQ",
+    "source": "https://t.me/s/ProxyMTProto",
+    "alive": true,
+    "latency": 318,
+    "first_seen": "2026-10-12",
+    "last_seen": "2026-10-12"
+  },
+  {
+    "server": "din5gli2.co.uk",
+    "port": "4455",
+    "secret": "dd104462821249bd7ac519130220c25d09",
+    "link": "tg://proxy?server=din5gli2.co.uk&port=4455&secret=dd104462821249bd7ac519130220c25d09",
+    "source": "https://t.me/s/ProxyMTProto",
+    "alive": true,
+    "latency": 353,
     "first_seen": "2026-10-12",
     "last_seen": "2026-10-12"
   }
